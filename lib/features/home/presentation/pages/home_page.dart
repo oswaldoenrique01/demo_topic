@@ -1,4 +1,5 @@
 import 'package:demo_valorant/core/injectors/injector.dart';
+import 'package:demo_valorant/features/home/domain/use_cases/home_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verse_ds/design/organisms/cards/dashboard_card_container.dart';
@@ -13,7 +14,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(getIt())..add(HomeStarted()),
+      create: (context) => HomeBloc(getIt<HomeUseCase>())..add(HomeStarted()),
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,

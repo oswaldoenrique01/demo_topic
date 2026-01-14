@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
-import '../../domain/repositories/home_repository.dart';
+import 'package:demo_valorant/features/home/domain/use_cases/home_use_case.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final HomeRepository _repository;
+  final HomeUseCase _useCase;
 
-  HomeBloc(this._repository) : super(HomeInitial()) {
+  HomeBloc(this._useCase) : super(HomeInitial()) {
     on<HomeStarted>(_onHomeStarted);
   }
 
@@ -16,7 +16,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     emit(HomeLoading());
     try {
-      final agents = await _repository.getAgents();
+      final agents = await _useCase.getAgents();
       emit(HomeLoaded(agents));
     } catch (e) {
       emit(HomeError(e.toString()));
