@@ -5,8 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:verse_ds/design/organisms/cards/dashboard_card_container.dart';
 import 'package:verse_ds/design/tokens/spacing.dart';
 import '../bloc/home_bloc.dart';
-import '../bloc/home_event.dart';
-import '../bloc/home_state.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
