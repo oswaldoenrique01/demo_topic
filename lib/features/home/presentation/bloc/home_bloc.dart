@@ -1,7 +1,10 @@
 import 'package:bloc/bloc.dart';
 import 'package:demo_valorant/features/home/domain/use_cases/home_use_case.dart';
-import 'home_event.dart';
-import 'home_state.dart';
+import 'package:equatable/equatable.dart';
+import '../../domain/entities/agent_entity.dart';
+
+part 'home_event.dart';
+part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final HomeUseCase _useCase;
