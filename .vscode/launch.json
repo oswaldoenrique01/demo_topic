@@ -1,0 +1,23 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "demo_valorant (Dev)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=.env.dev"]
+    },
+    {
+      "name": "demo_valorant (QA)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=.env.qa"]
+    },
+    {
+      "name": "demo_valorant (Prod)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": ["--dart-define-from-file=.env.prod"]
+    }
+  ]
+}
