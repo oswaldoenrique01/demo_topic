@@ -1,7 +1,5 @@
-import 'package:demo_valorant/core/error/app_error.dart';
-import 'package:demo_valorant/core/error/result.dart';
+import 'package:commons/commons.dart';
 
-import '../../../../core/network/base_client.dart';
 import '../models/agent.dart';
 
 abstract class HomeRemoteDataSource {
@@ -28,18 +26,12 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
       final List<dynamic> data = response.data['data'];
 
       final agents = data
-          .map(
-            (json) => AgentModel.fromJson(
-          json as Map<String, dynamic>,
-        ),
-      )
+          .map((json) => AgentModel.fromJson(json as Map<String, dynamic>))
           .toList();
 
       return Success(agents);
     } catch (e) {
-      return Failure(
-        const UnknownError('Error al parsear agentes'),
-      );
+      return Failure(const UnknownError('Error al parsear agentes'));
     }
   }
 }

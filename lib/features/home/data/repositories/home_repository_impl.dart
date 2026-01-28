@@ -1,4 +1,4 @@
-import 'package:demo_valorant/core/error/result.dart';
+import 'package:commons/commons.dart';
 import 'package:demo_valorant/features/home/domain/entities/agent_entity.dart';
 import '../../domain/repositories/home_repository.dart';
 import '../datasources/home_datasource.dart';
@@ -10,6 +10,10 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<Result<List<AgentEntity>>> getAgents() async {
-    return await _remoteDataSource.getAgents();
+    final result = await _remoteDataSource.getAgents();
+    return switch (result) {
+      Success(data: final data) => Success<List<AgentEntity>>(data),
+      Failure(error: final error) => Failure<List<AgentEntity>>(error),
+    };
   }
 }

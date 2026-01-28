@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:commons/commons.dart';
+import 'package:demo_valorant/core/router/app_router.dart';
 import '../bloc/splash_bloc.dart';
 
 class SplashPage extends StatelessWidget {
@@ -12,7 +14,7 @@ class SplashPage extends StatelessWidget {
       child: BlocListener<SplashBloc, SplashState>(
         listener: (context, state) {
           if (state is SplashSuccess) {
-            Navigator.of(context).pushReplacementNamed('/home');
+            NavigationHelper.goToAndReplace(context, AppRouter.selection.path);
           }
         },
         child: Scaffold(

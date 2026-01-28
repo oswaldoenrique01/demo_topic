@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:demo_valorant/core/error/result.dart';
+import 'package:commons/commons.dart';
 import 'package:demo_valorant/features/home/domain/use_cases/home_use_case.dart';
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/agent_entity.dart';
@@ -15,9 +15,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   }
 
   Future<void> _onHomeStarted(
-      HomeStarted event,
-      Emitter<HomeState> emit,
-      ) async {
+    HomeStarted event,
+    Emitter<HomeState> emit,
+  ) async {
     emit(HomeLoading());
 
     final result = await _useCase.getAgents();
