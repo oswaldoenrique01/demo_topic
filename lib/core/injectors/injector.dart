@@ -8,6 +8,7 @@ import 'package:demo_valorant/features/topics/domain/repositories/topics_reposit
 import 'package:demo_valorant/features/topics/domain/use_cases/get_topics_use_case.dart';
 import 'package:demo_valorant/core/router/app_router.dart';
 import 'package:demo_valorant/features/topics/presentation/bloc/topics_bloc.dart';
+import 'package:demo_valorant/features/topics/presentation/bloc/topic_detail_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:commons/commons.dart';
 import 'package:go_router/go_router.dart';
@@ -51,6 +52,10 @@ void initDependencies() {
 
   getIt.registerFactory<TopicsBloc>(
     () => TopicsBloc(getIt<GetTopicsUseCase>()),
+  );
+
+  getIt.registerFactory<TopicDetailBloc>(
+    () => TopicDetailBloc(getIt<TopicsRepository>()),
   );
 
   getIt.registerLazySingleton<AppRouter>(() => AppRouter());

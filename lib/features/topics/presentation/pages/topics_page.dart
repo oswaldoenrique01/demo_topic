@@ -2,6 +2,7 @@ import 'package:commons/commons.dart';
 import 'package:demo_valorant/core/injectors/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../bloc/topics_bloc.dart';
 
 class TopicsPage extends StatelessWidget {
@@ -36,6 +37,12 @@ class TopicsPage extends StatelessWidget {
                     ),
                     title: Text(topic.name),
                     subtitle: Text(topic.id),
+                    onTap: () {
+                      context.pushNamed(
+                        'topicDetail',
+                        pathParameters: {'id': topic.id},
+                      );
+                    },
                   );
                 },
               );

@@ -1,8 +1,10 @@
 import 'package:commons/commons.dart';
 import '../models/topic_model.dart';
+import '../../domain/entities/topic_detail_entity.dart';
 
 abstract class TopicsRemoteDataSource {
   Future<Result<List<TopicModel>>> getTopics();
+  Future<Result<TopicDetailEntity>> getTopicDetail(String id);
 }
 
 class TopicsRemoteDataSourceImpl implements TopicsRemoteDataSource {
@@ -18,6 +20,30 @@ class TopicsRemoteDataSourceImpl implements TopicsRemoteDataSource {
       Success(data: final response) => _mapResponse(response),
       Failure(error: final error) => Failure(error),
     };
+  }
+
+  @override
+  Future<Result<TopicDetailEntity>> getTopicDetail(String id) async {
+    await Future.delayed(const Duration(seconds: 1)); // Mock delay
+
+    // Mock data based on ID
+    return Success(
+      TopicDetailEntity(
+        id: id,
+        name: 'Agent Details',
+        icon:
+            'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/displayicon.png',
+        description:
+            'Role: Duelist\n\nEquipped with various cutting-edge tech, this agent is ready to strike at a moment\'s notice. Their abilities allow them to outmaneuver opponents and secure kills with precision.',
+        bannerImage:
+            'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/fullportrait.png',
+        gallery: [
+          'https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/displayicon.png',
+          'https://media.valorant-api.com/agents/add6443a-41bd-e414-f685-518d62a53eca/displayicon.png',
+          'https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/displayicon.png',
+        ],
+      ),
+    );
   }
 
   Result<List<TopicModel>> _mapResponse(response) {
