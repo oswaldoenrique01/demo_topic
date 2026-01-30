@@ -1,3 +1,4 @@
+import 'package:demo_valorant/features/create/presentation/bloc/form/form_bloc.dart';
 import 'package:demo_valorant/features/home/data/datasources/home_datasource.dart';
 import 'package:demo_valorant/features/home/data/repositories/home_repository_impl.dart';
 import 'package:demo_valorant/features/home/domain/repositories/home_repository.dart';
@@ -51,6 +52,10 @@ void initDependencies() {
 
   getIt.registerFactory<TopicsBloc>(
     () => TopicsBloc(getIt<GetTopicsUseCase>()),
+  );
+
+  getIt.registerFactory<FormCreateBloc>(
+    () => FormCreateBloc(),
   );
 
   getIt.registerLazySingleton<AppRouter>(() => AppRouter());
