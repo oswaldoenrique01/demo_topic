@@ -1,15 +1,17 @@
-import 'package:demo_valorant/core/injectors/injector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../atoms_design/organisms/topic_accordion.dart';
-import '../bloc/topics_bloc.dart';
+import '../../../../core/injectors/injector.dart';
+import '../bloc/topics_bloc/topics_bloc.dart';
+import '../widgets/topic_accordion_widget.dart';
 
 class TopicsPage extends StatelessWidget {
   const TopicsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery
+        .of(context)
+        .size;
     final double width = size.width;
     final double paddingHorizontal = (width * 0.5) / 2;
 
@@ -32,17 +34,11 @@ class TopicsPage extends StatelessWidget {
                   itemCount: state.topics.length,
                   itemBuilder: (context, index) {
                     final topic = state.topics[index];
-
-                    return TopicAccordion(
+                    return TopicAccordionWidget(
+                      key: ValueKey(topic.id),
                       topic: topic,
-                      subtopics: [
-                        'Componentes y Props',
-                        'Estado y Ciclo de Vida',
-                        'Hooks Básicos (useState, useEffect)',
-                        'Manejo de Eventos',
-                        'Renderizado Condicional',
-                      ],
-                      onTap: () {},
+                      onTapInEmpty: () {},
+                      onSubtopic: (value) {},
                     );
                   },
                 ),

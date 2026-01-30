@@ -1,8 +1,8 @@
 import 'package:bloc/bloc.dart';
 import 'package:commons/commons.dart';
 import 'package:equatable/equatable.dart';
-import '../../domain/entities/topic_entity.dart';
-import '../../domain/use_cases/get_topics_use_case.dart';
+import '../../../domain/entities/topic_entity.dart';
+import '../../../domain/use_cases/get_topics_use_case.dart';
 import 'package:commons/presenter/bloc/base_bloc.dart';
 
 part 'topics_event.dart';

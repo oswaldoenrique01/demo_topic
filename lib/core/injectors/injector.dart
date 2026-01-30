@@ -9,7 +9,7 @@ import 'package:demo_valorant/features/topics/domain/repositories/topics_reposit
 import 'package:demo_valorant/features/topics/domain/use_cases/get_topics_use_case.dart';
 import 'package:demo_valorant/core/router/app_router.dart';
 import 'package:demo_valorant/features/topics/injectors/topics_injector.dart';
-import 'package:demo_valorant/features/topics/presentation/bloc/topics_bloc.dart';
+import 'package:demo_valorant/features/topics/presentation/bloc/topics_bloc/topics_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:commons/commons.dart';
 import 'package:go_router/go_router.dart';

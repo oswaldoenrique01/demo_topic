@@ -1,10 +1,11 @@
+import 'package:demo_valorant/features/topics/domain/entities/subtopic_entity.dart';
 import 'package:flutter/material.dart';
 
 class SubtopicItem extends StatelessWidget {
-  final String title;
+  final SubtopicEntity subtopic;
   final VoidCallback? onTap;
 
-  const SubtopicItem({super.key, required this.title, this.onTap});
+  const SubtopicItem({super.key, required this.subtopic, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +18,7 @@ class SubtopicItem extends StatelessWidget {
       child: ListTile(
         leading: const Icon(Icons.chevron_right, color: Colors.blueAccent),
         title: Text(
-          title,
+          subtopic.name,
           style: const TextStyle(fontSize: 14, color: Colors.black87),
         ),
         dense: true,
