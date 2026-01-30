@@ -1,6 +1,7 @@
 import 'package:commons/commons.dart';
 import '../../domain/entities/subtopic_entity.dart';
 import '../../domain/entities/topic_entity.dart';
+import '../../domain/entities/topic_detail_entity.dart';
 import '../../domain/repositories/topics_repository.dart';
 import '../datasources/topics_datasource.dart';
 
@@ -15,6 +16,15 @@ class TopicsRepositoryImpl implements TopicsRepository {
     return switch (result) {
       Success(data: final data) => Success<List<TopicEntity>>(data),
       Failure(error: final error) => Failure<List<TopicEntity>>(error),
+    };
+  }
+
+  @override
+  Future<Result<TopicDetailEntity>> getTopicDetail(String id) async {
+    final result = await _remoteDataSource.getTopicDetail(id);
+    return switch (result) {
+      Success(data: final data) => Success(data),
+      Failure(error: final error) => Failure(error),
     };
   }
 
