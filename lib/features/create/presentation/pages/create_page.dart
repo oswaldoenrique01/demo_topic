@@ -33,7 +33,7 @@ class CreatePage extends StatelessWidget {
               title: const Text('Crear contenido'),
               actions: [
                 IconButton(
-                  onPressed: () => NavigationHelper.pushTo(context, AppRouter.topics.path),
+                  onPressed: () => NavigationHelper.goToAndReplace(context, AppRouter.topics.path),
                   icon: Icon(Icons.chevron_left),
                 )
               ],
@@ -165,7 +165,7 @@ class _ContentEditorPageState extends State<ContentEditorPage> {
                         return;
                       }
                     }
-                    getIt<FormCreateBloc>().add(UpdateDetailEvent(
+                    context.read<FormCreateBloc>().add(UpdateDetailEvent(
                       widget.topic.id,
                       widget.subtopic.id,
                       blocks,

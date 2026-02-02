@@ -36,18 +36,19 @@ class FormCreateBloc extends Bloc<FormCreateEvent, FormCreateState> {
   Future<void> _updateDetail(
       UpdateDetailEvent event,
       Emitter<FormCreateState> emit,
-  ) async {
+      ) async {
     emit(FormCreateLoading());
 
-    final result = await _useCase.update(event.topicId, event.subtopicId, event.blocks);
+    await _useCase.update(
+      event.topicId,
+      event.subtopicId,
+      event.blocks,
+    );
 
-    switch (result) {
-      case Success(data: final topics):
-        emit(FormCreateSuccess(event.blocks));
-        break;
-      case Failure(error: final error):
-        emit(FormCreateError(error.message));
-        break;
-    }
+    // 👉 dispara nuevo evento
+    add(GetDetailSubtopicEvent(
+      event.topicId,
+      event.subtopicId,
+    ));
   }
 }
