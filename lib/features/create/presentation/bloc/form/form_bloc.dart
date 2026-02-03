@@ -13,6 +13,7 @@ class FormCreateBloc extends Bloc<FormCreateEvent, FormCreateState> {
   FormCreateBloc(this._useCase) : super(FormCreateInitial()) {
     on<GetDetailSubtopicEvent>(_getSubtopicDetail);
     on<UpdateDetailEvent>(_updateDetail);
+    on<DeleteBlockDetailEvent>(_deleteBlockDetail);
   }
 
   Future<void> _getSubtopicDetail(
@@ -36,7 +37,7 @@ class FormCreateBloc extends Bloc<FormCreateEvent, FormCreateState> {
   Future<void> _updateDetail(
       UpdateDetailEvent event,
       Emitter<FormCreateState> emit,
-      ) async {
+  ) async {
     emit(FormCreateLoading());
 
     await _useCase.update(
@@ -50,5 +51,27 @@ class FormCreateBloc extends Bloc<FormCreateEvent, FormCreateState> {
       event.topicId,
       event.subtopicId,
     ));
+  }
+
+  Future<void> _deleteBlockDetail(
+      DeleteBlockDetailEvent event,
+      Emitter<FormCreateState> emit,
+      ) async {
+
+    // final result = await _useCase.deleteBlock(
+    await _useCase.deleteBlock(
+      event.topicId,
+      event.subtopicId,
+      event.blockId,
+    );
+
+    // switch (result) {
+    //   case Success(data: final _):
+    //     emit(FormCreateSuccess(event.blocks));
+    //     break;
+    //   case Failure(error: final error):
+    //     emit(FormCreateError(error.message));
+    //     break;
+    // }
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../atoms/topic_icon.dart';
 import '../molecules/subtopic_item.dart';
+// import '../../../../../core/router/app_router.dart';
+// import 'package:commons/router/navigation_helper.dart';
 
 class TopicAccordion extends StatefulWidget {
   final TopicEntity topic;
@@ -169,6 +171,7 @@ class _TopicAccordionState extends State<TopicAccordion>
               ),
               child: SubtopicItem(
                 subtopic: widget.subtopics[index],
+                // onTap: () => NavigationHelper.pushTo(context, AppRouter.create.path),
                 onTap: () => context.goNamed(
                   'create',
                   extra: {

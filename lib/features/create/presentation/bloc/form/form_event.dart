@@ -38,3 +38,26 @@ final class UpdateDetailEvent extends FormCreateEvent {
   ];
 
 }
+
+final class DeleteBlockDetailEvent extends FormCreateEvent {
+  final String topicId;
+  final String subtopicId;
+  final List<ContentBlockModel> blocks;
+  final String blockId;
+
+  const DeleteBlockDetailEvent({
+    required this.topicId,
+    required this.subtopicId,
+    required this.blockId,
+    required this.blocks,
+  });
+
+  @override
+  List<Object> get props => [
+    topicId,
+    subtopicId,
+    blockId,
+    blocks,
+  ];
+
+}

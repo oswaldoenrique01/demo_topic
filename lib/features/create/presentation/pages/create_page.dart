@@ -33,14 +33,19 @@ class CreatePage extends StatelessWidget {
               title: const Text('Crear contenido'),
               actions: [
                 IconButton(
-                  onPressed: () => NavigationHelper.goToAndReplace(context, AppRouter.topics.path),
+                  onPressed: () => NavigationHelper.pushReplacement(context, AppRouter.topics.path),
                   icon: Icon(Icons.chevron_left),
                 )
               ],
             ),
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
+            body: state is FormCreateError ?
+                Center(
+                  child: Text("Ha ocurrido un error con la solicitud, intente más tarde.", style: TextStyle(color: Colors.red),),
+                )
+                :
+                Center(
+                  child: CircularProgressIndicator(),
+                ),
           );
         },
       )
@@ -91,9 +96,18 @@ class _ContentEditorPageState extends State<ContentEditorPage> {
   }
 
   void _removeBlock(int index) {
+    final block = blocks[index];
     setState(() {
       blocks.removeAt(index);
     });
+    if(block.id.isNotEmpty){
+      context.read<FormCreateBloc>().add(DeleteBlockDetailEvent(
+        topicId: widget.topic.id,
+        subtopicId: widget.subtopic.id,
+        blockId: block.id,
+        blocks: blocks,
+      ));
+    }
   }
 
   @override
@@ -103,7 +117,7 @@ class _ContentEditorPageState extends State<ContentEditorPage> {
         title: const Text('Crear contenido'),
         actions: [
           IconButton(
-            onPressed: () => NavigationHelper.pushTo(context, AppRouter.topics.path),
+            onPressed: () => NavigationHelper.pushReplacement(context, AppRouter.topics.path),
             icon: Icon(Icons.chevron_left),
           )
         ],

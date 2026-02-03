@@ -15,4 +15,8 @@ class GetDetailSubtopicUseCase {
   Future<Result<bool>> update(String topic, String subtopic, List<ContentBlockModel> blocks) async {
     return await repository.updateDetail(topic, subtopic, blocks);
   }
+
+  Future<Result<bool>> deleteBlock(String topic, String subtopic, String blockId) async {
+    return await repository.deleteBlock(topic, subtopic, blockId);
+  }
 }

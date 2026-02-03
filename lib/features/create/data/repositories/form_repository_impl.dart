@@ -26,4 +26,13 @@ class FormRepositoryImpl implements FormRepository {
       Failure(error: final error) => Failure<bool>(error),
     };
   }
+
+  @override
+  Future<Result<bool>> deleteBlock(String topic, String subtopic, String blockId) async {
+    final result = await _remoteDataSource.deleteBlock(topic, subtopic, blockId);
+    return switch (result) {
+      Success(data: final data) => Success<bool>(data),
+      Failure(error: final error) => Failure<bool>(error),
+    };
+  }
 }

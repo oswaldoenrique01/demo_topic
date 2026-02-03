@@ -4,6 +4,7 @@ import '../models/topic_model.dart';
 abstract class FormRemoteDataSource {
   Future<Result<List<ContentBlockModel>>> getDetailSubtopic(String topic, String subtopic);
   Future<Result<bool>> updateDetail(String topic, String subtopic, List<ContentBlockModel> blocks);
+  Future<Result<bool>> deleteBlock(String topic, String subtopic, String blockId);
 }
 
 class FormRemoteDataSourceImpl implements FormRemoteDataSource {
@@ -20,7 +21,21 @@ class FormRemoteDataSourceImpl implements FormRemoteDataSource {
     });
 
     return switch (result) {
-      Success(data: final response) => Success(true),
+      Success(data: final _) => Success(true),
+      Failure(error: final error) => Failure(error),
+    };
+  }
+
+  @override
+  Future<Result<bool>> deleteBlock(String topic, String subtopic, String blockId) async {
+    final result = await _client.post('/delete-block-detail', data: {
+      "topicId": topic,
+      "subtopicId": subtopic,
+      "blockId": blockId,
+    });
+
+    return switch (result) {
+      Success(data: final _) => Success(true),
       Failure(error: final error) => Failure(error),
     };
   }
