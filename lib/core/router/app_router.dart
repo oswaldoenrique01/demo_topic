@@ -1,4 +1,6 @@
 import 'package:commons/commons.dart';
+import 'package:demo_valorant/features/auth/authentication/presentation/pages/authentication_page.dart';
+import 'package:demo_valorant/features/auth/authentication/presentation/routers/authentication_router.dart';
 import 'package:demo_valorant/features/home/presentation/pages/home_page.dart';
 import 'package:demo_valorant/features/selection/presentation/pages/selection_page.dart';
 import 'package:demo_valorant/features/splash/presentation/pages/splash_page.dart';
@@ -20,13 +22,20 @@ class AppRouter implements BaseRoutes {
     name: 'topicDetail',
     path: '/topics/:id',
   );
+  static RouteName login = AuthenticationRouter.login;
 
   @override
-  List<RouteBase> get routes => [GoRoute(
-    path: splash.path,
-    name: splash.name,
-    builder: (context, state) => const SplashPage(),
-  ),
+  List<RouteBase> get routes => [
+    GoRoute(
+      path: splash.path,
+      name: splash.name,
+      builder: (context, state) => const SplashPage(),
+    ),
+    GoRoute(
+      path: login.path,
+      name: login.name,
+      builder: (context, state) => const AuthenticationPage(),
+    ),
     GoRoute(
       path: selection.path,
       name: selection.name,
