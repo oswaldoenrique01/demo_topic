@@ -22,12 +22,11 @@ class AppRouter implements BaseRoutes {
   );
 
   @override
-  List<RouteBase> get routes => [
-    GoRoute(
-      path: splash.path,
-      name: splash.name,
-      builder: (context, state) => const SplashPage(),
-    ),
+  List<RouteBase> get routes => [GoRoute(
+    path: splash.path,
+    name: splash.name,
+    builder: (context, state) => const SplashPage(),
+  ),
     GoRoute(
       path: selection.path,
       name: selection.name,
@@ -37,26 +36,6 @@ class AppRouter implements BaseRoutes {
       path: home.path,
       name: home.name,
       builder: (context, state) => const HomePage(),
-    ),
-    GoRoute(
-      path: create.path,
-      name: create.name,
-      builder: (context, state) {
-        final data = state.extra! as Map<String, dynamic>;
-
-        return CreatePage(
-          topic: data['topic'] as TopicEntity,
-          subtopic: data['subtopic'] as SubtopicEntity,
-        );
-      },
-    ),
-    GoRoute(
-      path: topicDetail.path,
-      name: topicDetail.name,
-      builder: (context, state) {
-        final id = state.pathParameters['id']!;
-        return TopicDetailPage(id: id);
-      },
     ),
 
     ...TopicsRouter().routes,

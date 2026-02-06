@@ -1,51 +1,58 @@
 import 'package:bloc/bloc.dart';
 import 'package:commons/commons.dart';
-import '../../domain/entities/topic_detail_entity.dart';
+import '../../domain/entities/subtopic_detail_entity.dart';
 import '../../domain/repositories/topics_repository.dart';
 
 // Events
-abstract class TopicDetailEvent {}
+abstract class SubtopicDetailEvent {}
 
-class GetTopicDetailEvent extends TopicDetailEvent {
-  final String id;
-  GetTopicDetailEvent(this.id);
+class GetSubtopicDetailEvent extends SubtopicDetailEvent {
+  final String topicId;
+  final String subtopicId;
+  GetSubtopicDetailEvent({required this.topicId, required this.subtopicId});
 }
 
 // States
-abstract class TopicDetailState {}
+abstract class SubtopicDetailState {}
 
-class TopicDetailInitial extends TopicDetailState {}
+class SubtopicDetailInitial extends SubtopicDetailState {}
 
-class TopicDetailLoading extends TopicDetailState {}
+class SubtopicDetailLoading extends SubtopicDetailState {}
 
-class TopicDetailLoaded extends TopicDetailState {
-  final TopicDetailEntity topic;
-  TopicDetailLoaded(this.topic);
+class SubtopicDetailLoaded extends SubtopicDetailState {
+  final List<SubtopicDetailEntity> details;
+  SubtopicDetailLoaded(this.details);
 }
 
-class TopicDetailError extends TopicDetailState {
+class SubtopicDetailError extends SubtopicDetailState {
   final String message;
-  TopicDetailError(this.message);
+  SubtopicDetailError(this.message);
 }
 
 // Bloc
-class TopicDetailBloc extends Bloc<TopicDetailEvent, TopicDetailState> {
+class SubtopicDetailBloc
+    extends Bloc<SubtopicDetailEvent, SubtopicDetailState> {
   final TopicsRepository _repository;
 
-  TopicDetailBloc(this._repository) : super(TopicDetailInitial()) {
-    on<GetTopicDetailEvent>(_onGetTopicDetail);
+  SubtopicDetailBloc(this._repository) : super(SubtopicDetailInitial()) {
+    on<GetSubtopicDetailEvent>(_onGetSubtopicDetail);
   }
 
-  Future<void> _onGetTopicDetail(
-    GetTopicDetailEvent event,
-    Emitter<TopicDetailState> emit,
-  ) async {
-    emit(TopicDetailLoading());
-    final result = await _repository.getTopicDetail(event.id);
+  Future<void> _onGetSubtopicDetail(
+      GetSubtopicDetailEvent event,
+      Emitter<SubtopicDetailState> emit,
+      ) async {
+    emit(SubtopicDetailLoading());
+    final result = await _repository.getSubtopicDetail(
+      event.topicId,
+      event.subtopicId,
+    );
 
-    return switch (result) {
-      Success(data: final topic) => emit(TopicDetailLoaded(topic)),
-      Failure(error: final error) => emit(TopicDetailError(error.toString())),
-    };
+    switch (result) {
+      case Success(data: final details):
+        emit(SubtopicDetailLoaded(details));
+      case Failure(error: final error):
+        emit(SubtopicDetailError(error.toString()));
+    }
   }
 }

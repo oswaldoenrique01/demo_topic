@@ -7,7 +7,6 @@ import 'package:demo_valorant/features/create/presentation/bloc/form/form_bloc.d
 import 'package:demo_valorant/features/topics/domain/use_cases/get_subtopics_use_case.dart';
 import 'package:demo_valorant/features/topics/presentation/bloc/subtopics_bloc/subtopics_bloc.dart';
 import 'package:demo_valorant/features/topics/presentation/bloc/subtopic_detail_bloc.dart';
-import 'package:demo_valorant/features/topics/presentation/bloc/topic_detail_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../data/datasources/topics_datasource.dart';
@@ -18,44 +17,39 @@ import '../presentation/bloc/topics_bloc/topics_bloc.dart';
 
 void topicsInjector(GetIt getIt) {
   getIt.registerLazySingleton<BaseClient>(
-    () => BaseClient(),
+        () => BaseClient(),
     instanceName: 'commonsClient',
   );
 
   getIt.registerLazySingleton<TopicsRemoteDataSource>(
-    () => TopicsRemoteDataSourceImpl(
+        () => TopicsRemoteDataSourceImpl(
       getIt<BaseClient>(instanceName: 'commonsClient'),
     ),
   );
 
   getIt.registerLazySingleton<TopicsRepository>(
-    () => TopicsRepositoryImpl(getIt<TopicsRemoteDataSource>()),
+        () => TopicsRepositoryImpl(getIt<TopicsRemoteDataSource>()),
   );
 
   getIt.registerLazySingleton<GetTopicsUseCase>(
-    () => GetTopicsUseCase(getIt<TopicsRepository>()),
+        () => GetTopicsUseCase(getIt<TopicsRepository>()),
   );
 
   getIt.registerLazySingleton<GetSubtopicsUseCase>(
-    () => GetSubtopicsUseCase(getIt<TopicsRepository>()),
+        () => GetSubtopicsUseCase(getIt<TopicsRepository>()),
   );
 
   getIt.registerFactory<TopicsBloc>(
-    () => TopicsBloc(getIt<GetTopicsUseCase>()),
+        () => TopicsBloc(getIt<GetTopicsUseCase>()),
   );
 
   getIt.registerFactory<SubtopicsBloc>(
-    () => SubtopicsBloc(getIt<GetSubtopicsUseCase>()),
+        () => SubtopicsBloc(getIt<GetSubtopicsUseCase>()),
   );
 
   getIt.registerFactory<SubtopicDetailBloc>(
-    () => SubtopicDetailBloc(getIt<TopicsRepository>()),
+        () => SubtopicDetailBloc(getIt<TopicsRepository>()),
   );
-
-  getIt.registerFactory<TopicDetailBloc>(
-        () => TopicDetailBloc(getIt<TopicsRepository>()),
-  );
-
 
   getIt.registerLazySingleton<FormRemoteDataSource>(
         () => FormRemoteDataSourceImpl(
