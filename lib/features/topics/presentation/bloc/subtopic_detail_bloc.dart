@@ -39,9 +39,9 @@ class SubtopicDetailBloc
   }
 
   Future<void> _onGetSubtopicDetail(
-      GetSubtopicDetailEvent event,
-      Emitter<SubtopicDetailState> emit,
-      ) async {
+    GetSubtopicDetailEvent event,
+    Emitter<SubtopicDetailState> emit,
+  ) async {
     emit(SubtopicDetailLoading());
     final result = await _repository.getSubtopicDetail(
       event.topicId,

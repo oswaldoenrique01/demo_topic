@@ -1,72 +1,30 @@
-import 'package:commons/commons.dart';
-import 'package:demo_valorant/features/topics/domain/entities/subtopic_entity.dart';
-import 'package:demo_valorant/features/topics/domain/entities/topic_detail_entity.dart';
-import 'package:demo_valorant/features/topics/domain/entities/topic_entity.dart';
-import 'package:demo_valorant/features/topics/domain/repositories/topics_repository.dart';
-import 'package:demo_valorant/features/topics/presentation/bloc/topic_detail_bloc.dart';
+// This is a basic Flutter widget test.
+//
+// To perform an interaction with a widget in your test, use the WidgetTester
+// utility in the flutter_test package. For example, you can send tap and scroll
+// gestures. You can also use WidgetTester to find child widgets in the widget
+// tree, read text, and verify that the values of widget properties are correct.
+
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-class MockTopicsRepository implements TopicsRepository {
-  @override
-  Future<Result<List<TopicEntity>>> getTopics() async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<Result<TopicDetailEntity>> getTopicDetail(String id) async {
-    if (id == 'error') {
-      return Failure(const UnknownError('Error'));
-    }
-    return Success(
-      const TopicDetailEntity(
-        id: '1',
-        name: 'Test',
-        icon: 'icon',
-        description: 'desc',
-        bannerImage: 'banner',
-        gallery: [],
-      ),
-    );
-  }
-
-  @override
-  Future<Result<List<SubtopicEntity>>> getSubtopics(String id) {
-    // TODO: implement getSubtopics
-    throw UnimplementedError();
-  }
-}
+import 'package:demo_valorant/main.dart';
 
 void main() {
-  late TopicsRepository repository;
-  late TopicDetailBloc bloc;
+  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const MyApp());
 
-  setUp(() {
-    repository = MockTopicsRepository();
-    bloc = TopicDetailBloc(repository);
-  });
+    // Verify that our counter starts at 0.
+    expect(find.text('0'), findsOneWidget);
+    expect(find.text('1'), findsNothing);
 
-  tearDown(() {
-    bloc.close();
-  });
+    // Tap the '+' icon and trigger a frame.
+    await tester.tap(find.byIcon(Icons.add));
+    await tester.pump();
 
-  test(
-    'emits [TopicDetailLoading, TopicDetailLoaded] when successful',
-    () async {
-      bloc.add(GetTopicDetailEvent('1'));
-
-      await expectLater(
-        bloc.stream,
-        emitsInOrder([isA<TopicDetailLoading>(), isA<TopicDetailLoaded>()]),
-      );
-    },
-  );
-
-  test('emits [TopicDetailLoading, TopicDetailError] when failure', () async {
-    bloc.add(GetTopicDetailEvent('error'));
-
-    await expectLater(
-      bloc.stream,
-      emitsInOrder([isA<TopicDetailLoading>(), isA<TopicDetailError>()]),
-    );
+    // Verify that our counter has incremented.
+    expect(find.text('0'), findsNothing);
+    expect(find.text('1'), findsOneWidget);
   });
 }
