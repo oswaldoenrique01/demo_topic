@@ -1,41 +1,44 @@
-import 'package:demo_valorant/firebase_login_functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-// import 'package:commons/router/navigation_helper.dart';
-// import '../../../../../core/router/app_router.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:commons/commons.dart';
+import '../../../../../core/router/app_router.dart';
+import '../bloc/authentication_bloc.dart';
 
 class AuthenticationPage extends StatelessWidget {
   const AuthenticationPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.authStateChanges(),
-      builder: (context, snapshot) {
+    return BlocProvider(
+      create: (_) =>
+          GetIt.I<AuthenticationBloc>()..add(AuthenticationStarted()),
+      child: const AuthenticationPageView(),
+    );
+  }
+}
 
-        if(snapshot.hasData){
-          return Scaffold(
-            appBar: AppBar(title: const Text('Selecciona una opción')),
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text("Estás autenticado :D"),
-                  SizedBox(height: 16,),
-                  TextButton(
-                    style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue.shade100
-                    ),
-                    onPressed: () async {
-                      await AuthService().signOut();
-                    },
-                    child: Text("Cerrar sesión"),
-                  ),
-                ],
-              ),
-            ),
+class AuthenticationPageView extends StatelessWidget {
+  const AuthenticationPageView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: (context, state) {
+        if (state is AuthenticationError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        } else if (state is AuthenticationAuthenticated) {
+          if (context.mounted) {
+            NavigationHelper.goToAndReplace(context, AppRouter.selection.path);
+          }
+        }
+      },
+      builder: (context, state) {
+        if (state is AuthenticationLoading) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
           );
         }
 
@@ -45,15 +48,16 @@ class AuthenticationPage extends StatelessWidget {
   }
 }
 
-
 class AuthenticationPageContainer extends StatefulWidget {
   const AuthenticationPageContainer({super.key});
 
   @override
-  State<AuthenticationPageContainer> createState() => _AuthenticationPageContainerState();
+  State<AuthenticationPageContainer> createState() =>
+      _AuthenticationPageContainerState();
 }
 
-class _AuthenticationPageContainerState extends State<AuthenticationPageContainer> {
+class _AuthenticationPageContainerState
+    extends State<AuthenticationPageContainer> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -68,9 +72,7 @@ class _AuthenticationPageContainerState extends State<AuthenticationPageContaine
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Authentication'),
-      ),
+      appBar: AppBar(title: const Text('Authentication')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -79,9 +81,7 @@ class _AuthenticationPageContainerState extends State<AuthenticationPageContaine
             children: [
               TextFormField(
                 controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                ),
+                decoration: const InputDecoration(labelText: 'Email'),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Campo requerido*';
@@ -95,9 +95,7 @@ class _AuthenticationPageContainerState extends State<AuthenticationPageContaine
               const SizedBox(height: 16),
               TextFormField(
                 controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Password',
-                ),
+                decoration: const InputDecoration(labelText: 'Password'),
                 obscureText: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -111,14 +109,14 @@ class _AuthenticationPageContainerState extends State<AuthenticationPageContaine
               ),
               const SizedBox(height: 24),
               ElevatedButton(
-                onPressed: () async {
+                onPressed: () {
                   if (_formKey.currentState!.validate()) {
-
-                    final userData = await AuthService().signInWithEmail(_emailController.text, _passwordController.text);
-                    if(userData?.user != null) {
-                      // Descomentar abajo para ir a la ruta de selección
-                      //NavigationHelper.goToAndReplace(context, AppRouter.selection.path);
-                    }
+                    context.read<AuthenticationBloc>().add(
+                      AuthenticationLoginRequested(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      ),
+                    );
                   }
                 },
                 child: const Text('Login'),

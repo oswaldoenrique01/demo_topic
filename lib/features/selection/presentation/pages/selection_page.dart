@@ -36,21 +36,17 @@ class SelectionPage extends StatelessWidget {
                     onTap: () =>
                         NavigationHelper.pushTo(context, AppRouter.topics.path),
                   ),
-                  SizedBox(
-                    height: 32,
-                  ),
+                  SizedBox(height: 32),
                   TextButton(
                     style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue.shade100
+                      backgroundColor: Colors.blue.shade100,
                     ),
                     onPressed: () async {
                       await AuthService().signOut();
                     },
                     child: Text("Cerrar sesión D:"),
                   ),
-                  SizedBox(
-                    height: 32,
-                  ),
+                  SizedBox(height: 32),
                 ],
               ),
             ),
@@ -64,21 +60,28 @@ class SelectionPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text("Iniciar Sesión"),
-                SizedBox(height: 16,),
+                SizedBox(height: 16),
                 TextButton(
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue.shade100
+                    backgroundColor: Colors.blue.shade100,
                   ),
                   onPressed: () async {
-                    await AuthService().signInWithEmail("jyjdajj@gmail.com", "1234567890");
+                    await AuthService().signOut();
+                    if (context.mounted) {
+                      NavigationHelper.goToAndReplace(
+                        context,
+                        AppRouter.login.path,
+                      );
+                    }
                   },
-                  child: Text("Probar login :D"),
+                  child: Text("Ir al Login"),
                 ),
+                SizedBox(height: 16),
               ],
             ),
           ),
         );
-      }
+      },
     );
   }
 }
