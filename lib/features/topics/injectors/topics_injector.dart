@@ -1,7 +1,13 @@
 import 'package:commons/services/network/base_client.dart';
+import 'package:demo_valorant/features/create/data/datasources/form_datasource.dart';
+import 'package:demo_valorant/features/create/data/repositories/form_repository_impl.dart';
+import 'package:demo_valorant/features/create/domain/repositories/form_repository.dart';
+import 'package:demo_valorant/features/create/domain/use_cases/get_topics_use_case.dart';
+import 'package:demo_valorant/features/create/presentation/bloc/form/form_bloc.dart';
 import 'package:demo_valorant/features/topics/domain/use_cases/get_subtopics_use_case.dart';
 import 'package:demo_valorant/features/topics/presentation/bloc/subtopics_bloc/subtopics_bloc.dart';
 import 'package:demo_valorant/features/topics/presentation/bloc/subtopic_detail_bloc.dart';
+import 'package:demo_valorant/features/topics/presentation/bloc/topic_detail_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import '../data/datasources/topics_datasource.dart';
@@ -44,5 +50,28 @@ void topicsInjector(GetIt getIt) {
 
   getIt.registerFactory<SubtopicDetailBloc>(
     () => SubtopicDetailBloc(getIt<TopicsRepository>()),
+  );
+
+  getIt.registerFactory<TopicDetailBloc>(
+        () => TopicDetailBloc(getIt<TopicsRepository>()),
+  );
+
+
+  getIt.registerLazySingleton<FormRemoteDataSource>(
+        () => FormRemoteDataSourceImpl(
+      getIt<BaseClient>(instanceName: 'commonsClient'),
+    ),
+  );
+
+  getIt.registerLazySingleton<FormRepository>(
+        () => FormRepositoryImpl(getIt<FormRemoteDataSource>()),
+  );
+
+  getIt.registerLazySingleton<GetDetailSubtopicUseCase>(
+        () => GetDetailSubtopicUseCase(getIt<FormRepository>()),
+  );
+
+  getIt.registerFactory<FormCreateBloc>(
+        () => FormCreateBloc(getIt<GetDetailSubtopicUseCase>()),
   );
 }

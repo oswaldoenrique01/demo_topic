@@ -1,8 +1,11 @@
 import 'package:demo_valorant/features/topics/domain/entities/subtopic_entity.dart';
 import 'package:demo_valorant/features/topics/domain/entities/topic_entity.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../atoms/topic_icon.dart';
 import '../molecules/subtopic_item.dart';
+// import '../../../../../core/router/app_router.dart';
+// import 'package:commons/router/navigation_helper.dart';
 
 class TopicAccordion extends StatefulWidget {
   final TopicEntity topic;
@@ -166,7 +169,17 @@ class _TopicAccordionState extends State<TopicAccordion>
                   topicId: widget.topic.id,
                 ),
               ),
-              child: SubtopicItem(subtopic: widget.subtopics[index]),
+              child: SubtopicItem(
+                subtopic: widget.subtopics[index],
+                // onTap: () => NavigationHelper.pushTo(context, AppRouter.create.path),
+                onTap: () => context.goNamed(
+                  'create',
+                  extra: {
+                    'topic': widget.topic,
+                    'subtopic': widget.subtopics[index],
+                  },
+                ),
+              ),
             ),
           ),
         ),
