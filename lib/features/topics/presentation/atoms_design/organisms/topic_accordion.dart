@@ -1,7 +1,6 @@
 import 'package:demo_valorant/features/topics/domain/entities/subtopic_entity.dart';
 import 'package:demo_valorant/features/topics/domain/entities/topic_entity.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import '../atoms/topic_icon.dart';
 import '../molecules/subtopic_item.dart';
 
@@ -169,13 +168,13 @@ class _TopicAccordionState extends State<TopicAccordion>
               ),
               child: SubtopicItem(
                 subtopic: widget.subtopics[index],
-                onTap: () => context.goNamed(
-                  'create',
-                  extra: {
-                    'topic': widget.topic,
-                    'subtopic': widget.subtopics[index],
-                  },
-                ),
+                // onTap: () => context.goNamed(
+                //   'create',
+                //   extra: {
+                //     'topic': widget.topic,
+                //     'subtopic': widget.subtopics[index],
+                //   },
+                // ), // Se debe descomentar este onTap para acceder al formulario de edición de subtema
               ),
             ),
           ),
