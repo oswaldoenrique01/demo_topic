@@ -157,7 +157,7 @@ class _TopicAccordionState extends State<TopicAccordion>
         child: Column(
           children: List.generate(
             widget.subtopics.length,
-            (index) => GestureDetector(
+                (index) => GestureDetector(
               onTap: () => widget.onSubtopic?.call(
                 SubtopicEntity(
                   id: widget.subtopics[index].id,
