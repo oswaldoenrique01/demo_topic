@@ -16,8 +16,8 @@ import '../domain/use_cases/get_topics_use_case.dart';
 import '../presentation/bloc/topics_bloc/topics_bloc.dart';
 
 void topicsInjector(GetIt getIt) {
+
   getIt.registerLazySingleton<BaseClient>(
-        // () => BaseClient(token: token),
         () => BaseClient(),
     instanceName: 'commonsClient',
   );
