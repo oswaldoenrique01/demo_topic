@@ -1,11 +1,18 @@
+import 'package:demo_valorant/features/auth/authentication/data/cache/session_cache.dart';
 import 'package:demo_valorant/features/topics/domain/entities/subtopic_entity.dart';
 import 'package:flutter/material.dart';
 
 class SubtopicItem extends StatelessWidget {
   final SubtopicEntity subtopic;
   final VoidCallback? onTap;
+  final VoidCallback? onEdit;
 
-  const SubtopicItem({super.key, required this.subtopic, this.onTap});
+  const SubtopicItem({
+    super.key,
+    required this.subtopic,
+    this.onTap,
+    this.onEdit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +35,7 @@ class SubtopicItem extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.1),
+                    color: Colors.blue.withAlpha(25),
                     shape: BoxShape.circle,
                   ),
                   child: const Icon(
@@ -48,6 +55,15 @@ class SubtopicItem extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (onEdit != null && cacheUser.role == RoleUser.admin)
+                  IconButton(
+                    icon: const Icon(Icons.edit, size: 18, color: Colors.grey),
+                    onPressed: onEdit,
+                    splashRadius: 20,
+                    padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(),
+                  ),
+                const SizedBox(width: 8),
                 const Icon(Icons.chevron_right, size: 18, color: Colors.grey),
               ],
             ),
