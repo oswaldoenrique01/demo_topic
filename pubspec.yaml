@@ -18,7 +18,6 @@ dependencies:
   firebase_auth: ^5.0.0
   google_fonts: ^8.0.1
   cupertino_icons: ^1.0.8
-  dart_code_viewer2: ^1.0.3
   verse_ds:
     git:
       url: https://github.com/oswaldoenrique01/ds_demo.git
@@ -32,6 +31,7 @@ dependencies:
   go_router: ^17.0.1
   url_launcher: ^6.3.2
   image_picker: ^1.2.1
+  flutter_syntax_view: ^4.1.7
 
 dependency_overrides:
   google_fonts: ^8.0.1

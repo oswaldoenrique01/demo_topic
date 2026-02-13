@@ -1,8 +1,8 @@
-import 'package:dart_code_viewer2/dart_code_viewer2.dart';
 import 'package:demo_valorant/features/topics/domain/entities/subtopic_entity.dart';
 import 'package:demo_valorant/features/utils/atoms_design/organisms/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_syntax_view/flutter_syntax_view.dart';
 import 'package:get_it/get_it.dart';
 import '../../../utils/helper_demo.dart';
 import '../../domain/entities/subtopic_detail_entity.dart';
@@ -95,24 +95,28 @@ class SubtopicDetailPage extends StatelessWidget {
             ),
           ),
         );
-      case SubtopicDetailType.code: {
-        final int lineCount = entity.content.split('\n').length;
-        final double calculatedHeight = (lineCount * 24.0) + 40.0;
-
-        return IntrinsicHeight(
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(3),
-              border: Border.all(color: Colors.grey),
-              color: Colors.green,
+      case SubtopicDetailType.code:
+        {
+          return IntrinsicHeight(
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(3),
+                border: Border.all(color: Colors.grey),
+                color: Colors.green,
+              ),
+              child: SyntaxView(
+                code: entity.content,
+                syntax: Syntax.DART,
+                syntaxTheme: SyntaxTheme.vscodeDark(),
+                fontSize: 14.0,
+                withZoom: true,
+                withLinesCount: true,
+                expanded: false,
+                selectable: true,
+              ),
             ),
-            child: DartCodeViewer(
-              entity.content,
-              height: calculatedHeight,
-            ),
-          ),
-        );
-      }
+          );
+        }
       case SubtopicDetailType.url:
         return Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
