@@ -1,4 +1,3 @@
-import 'package:demo_valorant/features/topics/domain/entities/subtopic_entity.dart';
 import 'package:demo_valorant/features/utils/atoms_design/organisms/custom_scaffold.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,22 +9,24 @@ import '../bloc/subtopic_detail_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SubtopicDetailPage extends StatelessWidget {
-  final SubtopicEntity subtopic;
+  final String topicId;
+  final String subtopicId;
+  final String detailName;
 
-  const SubtopicDetailPage({super.key, required this.subtopic});
+  const SubtopicDetailPage({
+    super.key,
+    required this.topicId,
+    required this.subtopicId,
+    required this.detailName,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => GetIt.I<SubtopicDetailBloc>()
-        ..add(
-          GetSubtopicDetailEvent(
-            topicId: subtopic.topicId,
-            subtopicId: subtopic.id,
-          ),
-        ),
+        ..add(GetSubtopicDetailEvent(topicId: topicId, subtopicId: subtopicId)),
       child: CustomScaffold(
-        headerTitle: subtopic.name,
+        headerTitle: detailName,
         body: BlocBuilder<SubtopicDetailBloc, SubtopicDetailState>(
           builder: (context, state) {
             if (state is SubtopicDetailLoading) {

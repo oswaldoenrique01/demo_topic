@@ -51,11 +51,14 @@ class TopicsPage extends StatelessWidget {
                           topic: topic,
                           onTapInEmpty: () {},
                           onSubtopic: (subtopic) {
-                            context.pushNamed(
+                            context.goNamed(
                               TopicsRouter.subtopicDetail.name,
-                              extra: {
-                                'subtopic': subtopic
+                              pathParameters: {
+                                'topicId': subtopic.topicId,
+                                'subtopicId': subtopic.id,
+                                'detailName': topic.name
                               },
+
                             );
                           },
                           onEditTopic: () {

@@ -8,8 +8,8 @@ import '../pages/subtopic_detail_page.dart';
 class TopicsRouter extends BaseRoutes {
   static RouteName topics = RouteName(name: 'topics', path: '/topics');
   static RouteName subtopicDetail = RouteName(
-    name: 'subtopicDetail',
-    path: 'subtopicDetail',
+    name: 'detail',
+    path: 'topic/:topicId/detail/:subtopicId/:detailName',
   );
 
   @override
@@ -23,10 +23,15 @@ class TopicsRouter extends BaseRoutes {
           path: subtopicDetail.path,
           name: subtopicDetail.name,
           builder: (context, state) {
-            final extraData = state.extra as Map<String, dynamic>;
-            final SubtopicEntity subtopic = extraData['subtopic'] as SubtopicEntity;
+            final topicId = state.pathParameters['topicId']!;
+            final subtopicId = state.pathParameters['subtopicId']!;
+            final nameDetail = state.pathParameters['detailName']!;
 
-            return SubtopicDetailPage(subtopic: subtopic);
+            return SubtopicDetailPage(
+              topicId: topicId,
+              subtopicId: subtopicId,
+              detailName: nameDetail,
+            );
           },
         ),
       ],
