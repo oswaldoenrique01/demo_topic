@@ -35,112 +35,146 @@ class TopicAccordion extends StatefulWidget {
   State<TopicAccordion> createState() => _TopicAccordionState();
 }
 
-class _TopicAccordionState extends State<TopicAccordion>
-    with SingleTickerProviderStateMixin {
-  late ValueNotifier<bool> _isExpandedNotifier;
-  late AnimationController _controller;
-  late Animation<double> _iconTurns;
-
-  @override
-  void initState() {
-    super.initState();
-    _isExpandedNotifier = ValueNotifier<bool>(false);
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-    _iconTurns = Tween<double>(
-      begin: 0.0,
-      end: 0.25,
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
-  }
+class _TopicAccordionState extends State<TopicAccordion> {
+  final ExpansibleController _controller = ExpansibleController();
 
   @override
   void didUpdateWidget(TopicAccordion oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Auto-expandir cuando shouldExpand cambia a true
-    if (widget.shouldExpand && !_isExpandedNotifier.value) {
-      _isExpandedNotifier.value = true;
-      _controller.forward();
+    if (widget.shouldExpand && !oldWidget.shouldExpand) {
+      _controller.expand();
     }
-  }
-
-  @override
-  void dispose() {
-    _isExpandedNotifier.dispose();
-    _controller.dispose();
-    super.dispose();
-  }
-
-  void _handleTap() {
-    if (widget.subtopics.isNotEmpty) {
-      _isExpandedNotifier.value = !_isExpandedNotifier.value;
-      if (_isExpandedNotifier.value) {
-        _controller.forward();
-      } else {
-        _controller.reverse();
-      }
-    }
-
-    widget.onTap?.call();
   }
 
   @override
   Widget build(BuildContext context) {
+    final String errorMessage = widget.errorMessage ?? '';
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: Colors.grey.shade300),
+          side: BorderSide(color: Colors.white),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
+        child: ExpansionTile(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            side: BorderSide(color: Colors.white),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          controller: _controller,
+          onExpansionChanged: (expanded) {
+            if (expanded) {
+              widget.onTap?.call();
+            }
+          },
+          tilePadding: const EdgeInsets.all(16.0),
+          childrenPadding: const EdgeInsets.only(
+            left: 16,
+            right: 16,
+            bottom: 16,
+          ),
+          leading: TopicIcon(url: widget.topic.icon),
+          title: Text(
+            widget.topic.name,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.blueAccent,
+              fontSize: 16,
+            ),
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (widget.onEditTopic != null &&
+                  cacheUser.role == RoleUser.admin)
+                IconButton(
+                  icon: const Icon(Icons.edit, size: 20, color: Colors.grey),
+                  onPressed: widget.onEditTopic,
+                  splashRadius: 20,
+                  constraints: const BoxConstraints(),
+                  padding: EdgeInsets.zero,
+                ),
+              const SizedBox(width: 8),
+              _buildTrailingIcon(),
+            ],
+          ),
           children: [
-            InkWell(
-              onTap: _handleTap,
-              borderRadius: BorderRadius.circular(12),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Row(
-                  children: [
-                    TopicIcon(url: widget.topic.icon),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        widget.topic.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blueAccent,
-                          fontSize: 16,
-                        ),
-                      ),
+            if (widget.subtopics.isNotEmpty)
+              ...widget.subtopics.map(
+                (subtopic) => GestureDetector(
+                  onTap: () => widget.onSubtopic?.call(
+                    SubtopicEntity(
+                      id: subtopic.id,
+                      name: subtopic.name,
+                      icon: subtopic.icon,
+                      topicId: widget.topic.id,
                     ),
-                    if (widget.onEditTopic != null && cacheUser.role == RoleUser.admin)
-                      IconButton(
-                        icon: const Icon(
-                          Icons.edit,
-                          size: 20,
-                          color: Colors.grey,
-                        ),
-                        onPressed: widget.onEditTopic,
-                        splashRadius: 20,
-                        constraints: const BoxConstraints(),
-                        padding: EdgeInsets.zero,
-                      ),
-                    const SizedBox(width: 8),
-                    _buildTrailingIcon(),
-                  ],
+                  ),
+                  child: SubtopicItem(
+                    subtopic: subtopic,
+                    onEdit: () => widget.onEditSubtopic?.call(subtopic),
+                  ),
                 ),
               ),
-            ),
-            ValueListenableBuilder<bool>(
-              valueListenable: _isExpandedNotifier,
-              builder: (context, isExpanded, child) {
-                if (!isExpanded) return const SizedBox.shrink();
-                return _buildExpandedContent();
-              },
-            ),
+            if (widget.isLoading)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+
+            if (widget.subtopics.isEmpty &&
+                !widget.isLoading &&
+                errorMessage.isEmpty)
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.layers_clear_outlined,
+                    size: 64,
+                    color: Colors.grey,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Sin subtemas registrados",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Selecciona otro tema para explorar más detalles.",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+
+            if (errorMessage.isNotEmpty)
+              Text(
+                'Error: ${widget.errorMessage}',
+                style: const TextStyle(color: Colors.red),
+              ),
+            if (widget.onAddSubtopic != null &&
+                cacheUser.role == RoleUser.admin)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: TextButton.icon(
+                  onPressed: widget.onAddSubtopic,
+                  icon: const Icon(Icons.add, size: 20),
+                  label: const Text('Agregar Subtema'),
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.blue,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    backgroundColor: Colors.blue.withAlpha(13),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
@@ -155,72 +189,6 @@ class _TopicAccordionState extends State<TopicAccordion>
         child: CircularProgressIndicator(strokeWidth: 2),
       );
     }
-
-    if (widget.subtopics.isNotEmpty) {
-      return RotationTransition(
-        turns: _iconTurns,
-        child: const Icon(
-          Icons.arrow_forward_ios,
-          size: 16,
-          color: Colors.grey,
-        ),
-      );
-    }
-
-    return const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey);
-  }
-
-  Widget _buildExpandedContent() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 16, top: 0, right: 16, bottom: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (widget.subtopics.isNotEmpty)
-            ...List.generate(
-              widget.subtopics.length,
-              (index) => GestureDetector(
-                onTap: () => widget.onSubtopic?.call(
-                  SubtopicEntity(
-                    id: widget.subtopics[index].id,
-                    name: widget.subtopics[index].name,
-                    icon: widget.subtopics[index].icon,
-                    topicId: widget.topic.id,
-                  ),
-                ),
-                child: SubtopicItem(
-                  subtopic: widget.subtopics[index],
-                  onEdit: () =>
-                      widget.onEditSubtopic?.call(widget.subtopics[index]),
-                ),
-              ),
-            ),
-
-          if (widget.subtopics.isEmpty && widget.errorMessage != null)
-            Text(
-              'Error: ${widget.errorMessage}',
-              style: const TextStyle(color: Colors.red),
-            ),
-
-          if (widget.onAddSubtopic != null && cacheUser.role == RoleUser.admin)
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: TextButton.icon(
-                onPressed: widget.onAddSubtopic,
-                icon: const Icon(Icons.add, size: 20),
-                label: const Text('Agregar Subtema'),
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.blue,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
-                  backgroundColor: Colors.blue.withAlpha(13),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
+    return const Icon(Icons.expand_more, color: Colors.grey);
   }
 }
